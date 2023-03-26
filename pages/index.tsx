@@ -11,24 +11,22 @@ export default function Home() {
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
-    const prompt = formData.get("prompt")?.toString().trim();
-    const prompt2 = formData.get("prompt2")?.toString().trim();
-    const prompt3 = formData.get("prompt3")?.toString().trim();
+    const relationship = formData.get("relationship")?.toString().trim();
+    const age = formData.get("age")?.toString().trim();
+    const hobbies = formData.get("hobbies")?.toString().trim();
 
-    if (prompt && prompt2 && prompt3) {
+    if (relationship && age && hobbies) {
       try {
         setQuote("");
         setQuoteLoadingError(false);
         setQuoteLoading(true);
 
-        const response = await fetch(
-          "/api/openai?prompt=" +
-            encodeURIComponent(prompt) +
-            "&prompt2=" +
-            encodeURIComponent(prompt2) +
-            "&prompt3=" +
-            encodeURIComponent(prompt3)
-        );
+        const url = new URL("/api/openai", window.location.href);
+        url.searchParams.append("relationship", relationship);
+        url.searchParams.append("age", age);
+        url.searchParams.append("hobbies", hobbies);
+
+        const response = await fetch(url.pathname + url.search);
         const body = await response.json();
         setQuote(body.quote);
       } catch (error) {
@@ -37,6 +35,8 @@ export default function Home() {
       } finally {
         setQuoteLoading(false);
       }
+    } else {
+      setQuoteLoadingError(true);
     }
   }
 
@@ -57,19 +57,19 @@ export default function Home() {
           <Form.Group className="mb-3" controlId="prompt-input">
             <Form.Label>A gift for a</Form.Label>
             <Form.Control
-              name="prompt"
+              name="relationship"
               placeholder="grandmother"
               maxLength={100}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="prompt-input">
             <Form.Label>who is</Form.Label>
-            <Form.Control name="prompt2" placeholder="78" maxLength={100} />
+            <Form.Control name="age" placeholder="78" maxLength={100} />
           </Form.Group>
           <Form.Group className="mb-3" controlId="prompt-input">
             <Form.Label>years old, their hobbies are</Form.Label>
             <Form.Control
-              name="prompt3"
+              name="hobbies"
               placeholder="mountainbiking, hiking, and reading"
               maxLength={100}
             />
