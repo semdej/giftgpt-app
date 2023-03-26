@@ -28,19 +28,22 @@ const QuerySchema = z.object({
 
 export default async function handler(req: Request, res: NextApiResponse) {
   try {
-    console.log("req.query", req.query);
-
     const { age, hobbies, relationship } = QuerySchema.parse(req.query);
 
-    const completion = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: `Give me 10 unique gift ideas with for my ${relationship} who is ${age} years old and likes to ${hobbies}`,
+    const completion = await openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "user",
+          content: `Give me 10 unique gift ideas with for my ${relationship} who is ${age} years old and likes to ${hobbies}`,
+        },
+      ],
       max_tokens: 500,
       temperature: 1,
       presence_penalty: 0,
       frequency_penalty: 0,
     });
-    const quote = completion.data.choices[0].text;
+    const quote = completion.data.choices[0].message?.content || "";
 
     res.status(200).json({ quote });
   } catch (error) {
