@@ -34,8 +34,13 @@ export default async function handler(req: Request, res: NextApiResponse) {
       model: "gpt-3.5-turbo",
       messages: [
         {
+          role: "system",
+          content:
+            "Use the following format for each gift idea: 1. {gift idea} - {gift description}",
+        },
+        {
           role: "user",
-          content: `Give me 10 unique gift ideas with for my ${relationship} who is ${age} years old and likes to ${hobbies}`,
+          content: `Create a list of 3 unique gift ideas for my ${relationship} who is ${age} years old and likes to ${hobbies}, exclude personalized gifts.`,
         },
       ],
       max_tokens: 500,
@@ -43,9 +48,11 @@ export default async function handler(req: Request, res: NextApiResponse) {
       presence_penalty: 0,
       frequency_penalty: 0,
     });
-    const quote = completion.data.choices[0].message?.content || "";
+    const gifts = (completion.data.choices[0].message?.content || "")
+      .split("\n")
+      .filter((gift) => gift.length > 0 && /[0-9]\..*/g.test(gift));
 
-    res.status(200).json({ quote });
+    res.status(200).json({ gifts });
   } catch (error) {
     if (error instanceof ZodError) {
       return res.status(400).json({ error: error.errors[0].message });

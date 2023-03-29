@@ -3,10 +3,29 @@ import styles from "@/styles/Home.module.css";
 import { Form, Button, Spinner } from "react-bootstrap";
 import { FormEvent, useState } from "react";
 
+function GiftResult({ gift }: { gift: string }) {
+  const keyWords = gift
+    .replace(/[0-9]*\.(.*?)-.*/g, "$1")
+    .trim()
+    .split(" ")
+    .map((word) => word.trim().toLowerCase());
+  const link = `https://www.amazon.com/s?k=${keyWords.join(
+    "+"
+  )}&linkCode=ll2&tag=giftgpt03-20&language=en_US&ref_=as_li_ss_tl`;
+  return (
+    <p>
+      {gift}{" "}
+      <a target="_blank" href={link}>
+        Link to Amazon
+      </a>
+    </p>
+  );
+}
+
 export default function Home() {
-  const [quote, setQuote] = useState("");
-  const [quoteLoading, setQuoteLoading] = useState(false);
-  const [quoteLoadingError, setQuoteLoadingError] = useState(false);
+  const [gifts, setGifts] = useState([]);
+  const [giftsLoading, setGiftsLoading] = useState(false);
+  const [giftsLoadingError, setGiftsLoadingError] = useState(false);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -17,9 +36,9 @@ export default function Home() {
 
     if (relationship && age && hobbies) {
       try {
-        setQuote("");
-        setQuoteLoadingError(false);
-        setQuoteLoading(true);
+        setGifts([]);
+        setGiftsLoadingError(false);
+        setGiftsLoading(true);
 
         const url = new URL("/api/openai", window.location.href);
         url.searchParams.append("relationship", relationship);
@@ -28,15 +47,15 @@ export default function Home() {
 
         const response = await fetch(url.pathname + url.search);
         const body = await response.json();
-        setQuote(body.quote);
+        setGifts(body.gifts);
       } catch (error) {
         console.error(error);
-        setQuoteLoadingError(true);
+        setGiftsLoadingError(true);
       } finally {
-        setQuoteLoading(false);
+        setGiftsLoading(false);
       }
     } else {
-      setQuoteLoadingError(true);
+      setGiftsLoadingError(true);
     }
   }
 
@@ -74,13 +93,15 @@ export default function Home() {
               maxLength={100}
             />
           </Form.Group>
-          <Button type="submit" className="mb-3" disabled={quoteLoading}>
+          <Button type="submit" className="mb-3" disabled={giftsLoading}>
             Generate
           </Button>
         </Form>
-        {quoteLoading && <Spinner animation="border" />}
-        {quoteLoadingError && "Something went wrong. Please try again."}
-        {quote && <h5>{quote}</h5>}
+        {giftsLoading && <Spinner animation="border" />}
+        {giftsLoadingError && "Something went wrong. Please try again."}
+        {gifts.map((gift, index) => (
+          <GiftResult key={index} gift={gift} />
+        ))}
       </main>
     </>
   );
