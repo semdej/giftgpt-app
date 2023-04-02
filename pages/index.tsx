@@ -1,7 +1,7 @@
 import Head from "next/head";
-import styles from "@/styles/Home.module.css";
-import { Form, Button, Spinner } from "react-bootstrap";
 import { FormEvent, useState } from "react";
+import { Button, MultiSelect, NumberInput, Loader } from "@mantine/core";
+import { Hero } from "@/components/hero";
 
 function GiftResult({ gift }: { gift: string }) {
   const keyWords = gift
@@ -23,6 +23,14 @@ function GiftResult({ gift }: { gift: string }) {
 }
 
 export default function Home() {
+  const [person, setPerson] = useState([
+    { value: "grandma", label: "Grandma" },
+    { value: "dad", label: "Dad" },
+  ]);
+  const [hobbies, setHobbies] = useState([
+    { value: "mountainbike", label: "Mountainbiking" },
+    { value: "tennis", label: "Tennis" },
+  ]);
   const [gifts, setGifts] = useState([]);
   const [giftsLoading, setGiftsLoading] = useState(false);
   const [giftsLoadingError, setGiftsLoadingError] = useState(false);
@@ -65,39 +73,45 @@ export default function Home() {
         <title>Gift Ideas powered by GPT</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <main className={styles.main}>
-        <h1>Gift Ideas</h1>
-        <h2>powered by GPT-3</h2>
-        <div>
-          Enter a person and the AI will generate a list of ten gift ideas for
-          them.
-        </div>
-        <Form onSubmit={handleSubmit} className={styles.inputForm}>
-          <Form.Group className="mb-3" controlId="prompt-input">
-            <Form.Label>A gift for a</Form.Label>
-            <Form.Control
-              name="relationship"
-              placeholder="grandmother"
-              maxLength={100}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="prompt-input">
-            <Form.Label>who is</Form.Label>
-            <Form.Control name="age" placeholder="78" maxLength={100} />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="prompt-input">
-            <Form.Label>years old, their hobbies are</Form.Label>
-            <Form.Control
-              name="hobbies"
-              placeholder="mountainbiking, hiking, and reading"
-              maxLength={100}
-            />
-          </Form.Group>
-          <Button type="submit" className="mb-3" disabled={giftsLoading}>
-            Generate
+      <Hero />
+      <main>
+        <form onSubmit={handleSubmit}>
+          <MultiSelect
+            label="For who?"
+            data={person}
+            name="relationship"
+            placeholder="Select person"
+            searchable
+            maxSelectedValues={1}
+            creatable
+            getCreateLabel={(query) => `+ Create ${query}`}
+            onCreate={(query) => {
+              const item = { value: query, label: query };
+              setPerson((current) => [...current, item]);
+              return item;
+            }}
+          />
+          <NumberInput label="Age" name="age" placeholder="Enter age" />
+          <MultiSelect
+            label="Hobbies"
+            data={hobbies}
+            name="hobbies"
+            placeholder="Select hobbies"
+            searchable
+            creatable
+            maxSelectedValues={3}
+            getCreateLabel={(query) => `+ Create ${query}`}
+            onCreate={(query) => {
+              const item = { value: query, label: query };
+              setHobbies((current) => [...current, item]);
+              return item;
+            }}
+          />
+          <Button type="submit" disabled={giftsLoading}>
+            Submit
           </Button>
-        </Form>
-        {giftsLoading && <Spinner animation="border" />}
+        </form>
+        {giftsLoading && <Loader />}
         {giftsLoadingError && "Something went wrong. Please try again."}
         {gifts.map((gift, index) => (
           <GiftResult key={index} gift={gift} />
