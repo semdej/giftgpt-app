@@ -3,6 +3,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { Configuration, OpenAIApi } from "openai";
 import { z, ZodError } from "zod";
 
+import { parseGiftResponse } from "../../models/gift";
+
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -36,7 +38,7 @@ export default async function handler(req: Request, res: NextApiResponse) {
         {
           role: "system",
           content:
-            "Use the following format for each gift idea: 1. {gift idea} - {gift description}",
+            "Use the following format for each gift idea: 1. {gift idea} || {gift description}",
         },
         {
           role: "user",
@@ -48,12 +50,17 @@ export default async function handler(req: Request, res: NextApiResponse) {
       presence_penalty: 0,
       frequency_penalty: 0,
     });
+
     const gifts = (completion.data.choices[0].message?.content || "")
       .split("\n")
-      .filter((gift) => gift.length > 0 && /[0-9]\..*/g.test(gift));
+      .filter((gift) => gift.length > 0 && /[0-9]\..*/g.test(gift))
+      .map(parseGiftResponse)
+      .filter((gift) => gift !== null);
 
     res.status(200).json({ gifts });
   } catch (error) {
+    console.error(error);
+
     if (error instanceof ZodError) {
       return res.status(400).json({ error: error.errors[0].message });
     }

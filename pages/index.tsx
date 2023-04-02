@@ -7,20 +7,17 @@ import {
   Text,
   Center,
 } from "@mantine/core";
-import { Hero } from "../components/Hero";
 
-function GiftResult({ gift }: { gift: string }) {
-  const keyWords = gift
-    .replace(/[0-9]*\.(.*?)-.*/g, "$1")
-    .trim()
-    .split(" ")
-    .map((word) => word.trim().toLowerCase());
-  const link = `https://www.amazon.com/s?k=${keyWords.join(
+import { Hero } from "../components/Hero";
+import { Gift } from "../models/gift";
+
+function GiftResult({ gift }: { gift: Gift }) {
+  const link = `https://www.amazon.com/s?k=${gift.keywords.join(
     "+"
   )}&linkCode=ll2&tag=giftgpt03-20&language=en_US&ref_=as_li_ss_tl`;
   return (
     <p>
-      {gift}{" "}
+      {`${gift.title} - ${gift.description}`}
       <a target="_blank" href={link}>
         Link to Amazon
       </a>
@@ -37,7 +34,7 @@ export default function Home() {
     { value: "mountainbike", label: "Mountainbike" },
     { value: "tennis", label: "Tennis" },
   ]);
-  const [gifts, setGifts] = useState([]);
+  const [gifts, setGifts] = useState<Gift[]>([]);
   const [giftsLoading, setGiftsLoading] = useState(false);
   const [giftsLoadingError, setGiftsLoadingError] = useState(false);
 
