@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { FormEvent, useState } from "react";
 import { Button, MultiSelect, NumberInput, Loader } from "@mantine/core";
-import { Hero } from "@/components/hero";
+import { Hero } from "components/hero";
 
 function GiftResult({ gift }: { gift: string }) {
   const keyWords = gift
