@@ -1,30 +1,49 @@
-import { FormEvent, useState } from "react";
 import {
+  Alert,
+  Box,
   Button,
+  Card,
+  Center,
   MultiSelect,
   NumberInput,
-  Loader,
-  Text,
-  Center,
   Stack,
-  Box,
+  Text,
 } from "@mantine/core";
+import { FormEvent, useState } from "react";
 
+import { Header } from "../components/Header";
 import { Hero } from "../components/Hero";
 import { Gift } from "../models/gift";
-import { Header } from "../components/Header";
+import { GiftsLoadingMessage } from "@/components/GiftLoadingMessage";
 
 function GiftResult({ gift }: { gift: Gift }) {
   const link = `https://www.amazon.com/s?k=${gift.keywords.join(
     "+"
   )}&linkCode=ll2&tag=giftgpt03-20&language=en_US&ref_=as_li_ss_tl`;
+
   return (
-    <p>
-      {`${gift.title} - ${gift.description}`}
-      <a target="_blank" href={link}>
-        Link to Amazon
-      </a>
-    </p>
+    <Card shadow="sm" padding="lg" radius="md" withBorder>
+      <Text weight={500} mb="xs" size="xl">
+        {gift.title}
+      </Text>
+
+      <Text size="sm" color="dimmed">
+        {gift.description}
+      </Text>
+
+      <Button
+        component="a"
+        target="_blank"
+        href={link}
+        variant="light"
+        color="blue"
+        fullWidth
+        mt="md"
+        radius="md"
+      >
+        Check available products
+      </Button>
+    </Card>
   );
 }
 
@@ -79,94 +98,112 @@ export default function Home() {
 
       <Hero />
 
-      <Center pb="4rem">
-        <Box component="form" onSubmit={handleSubmit} w="100%" maw="32rem">
-          <Stack spacing="3rem" px="md">
-            <Stack spacing=".5rem">
-              <Text ta="center" fw={500} size="md" color="white">
-                🤝 I'M LOOKING FOR A GIFT FOR MY
-              </Text>
-              <MultiSelect
-                mt={15}
-                size="lg"
-                w="100%"
-                data={person}
-                name="relationship"
-                placeholder="Friend, family, colleague, etc."
-                searchable
-                maxSelectedValues={1}
-                creatable
-                getCreateLabel={(query) => `+ Create ${query}`}
-                onCreate={(query) => {
-                  const item = { value: query, label: query };
-                  setPerson((current) => [...current, item]);
-                  return item;
-                }}
-              />
-            </Stack>
+      <Center component={Stack} pb="4rem" spacing="xl">
+        {!giftsLoading && gifts.length === 0 && (
+          <Box component="form" onSubmit={handleSubmit} w="100%" maw="32rem">
+            <Stack spacing="3rem" px="md">
+              <Stack spacing=".5rem">
+                <Text ta="center" fw={500} size="md" color="white">
+                  🤝 I'M LOOKING FOR A GIFT FOR MY
+                </Text>
+                <MultiSelect
+                  mt={15}
+                  size="lg"
+                  w="100%"
+                  data={person}
+                  name="relationship"
+                  placeholder="Friend, family, colleague, etc."
+                  searchable
+                  maxSelectedValues={1}
+                  creatable
+                  getCreateLabel={(query) => `+ Create ${query}`}
+                  onCreate={(query) => {
+                    const item = { value: query, label: query };
+                    setPerson((current) => [...current, item]);
+                    return item;
+                  }}
+                />
+              </Stack>
 
-            <Stack spacing=".5rem">
-              <Text ta="center" fw={500} size="md" color="white">
-                🧓 WHO IS
-              </Text>
-              <NumberInput
-                mt={15}
-                size="lg"
-                w="100%"
-                name="age"
-                max={120}
-                min={0}
-                placeholder="25 years old"
-              />
-            </Stack>
+              <Stack spacing=".5rem">
+                <Text ta="center" fw={500} size="md" color="white">
+                  🧓 WHO IS
+                </Text>
+                <NumberInput
+                  mt={15}
+                  size="lg"
+                  w="100%"
+                  name="age"
+                  max={120}
+                  min={0}
+                  placeholder="25 years old"
+                />
+              </Stack>
 
-            <Stack spacing=".5rem">
-              <Text ta="center" fw={500} size="md" color="white">
-                ❤️ AND LOVES TO
-              </Text>
-              <MultiSelect
-                mt={15}
-                w="100%"
-                size="lg"
-                data={hobbies}
-                name="hobbies"
-                placeholder="Hike, mountainbike, game, etc."
-                searchable
-                creatable
-                maxSelectedValues={3}
-                getCreateLabel={(query) => `+ Create ${query}`}
-                onCreate={(query) => {
-                  const item = { value: query, label: query };
-                  setHobbies((current) => [...current, item]);
-                  return item;
-                }}
-              />
-            </Stack>
+              <Stack spacing=".5rem">
+                <Text ta="center" fw={500} size="md" color="white">
+                  ❤️ AND LOVES TO
+                </Text>
+                <MultiSelect
+                  mt={15}
+                  w="100%"
+                  size="lg"
+                  data={hobbies}
+                  name="hobbies"
+                  placeholder="Hike, mountainbike, game, etc."
+                  searchable
+                  creatable
+                  maxSelectedValues={3}
+                  getCreateLabel={(query) => `+ Create ${query}`}
+                  onCreate={(query) => {
+                    const item = { value: query, label: query };
+                    setHobbies((current) => [...current, item]);
+                    return item;
+                  }}
+                />
+              </Stack>
 
-            <Center>
+              <Center>
+                <Button
+                  size="md"
+                  variant="gradient"
+                  gradient={{ from: "#8701F0", to: "#CC01FF" }}
+                  type="submit"
+                  disabled={giftsLoading}
+                >
+                  Find me a gift!
+                </Button>
+              </Center>
+            </Stack>
+          </Box>
+        )}
+
+        {giftsLoading && <GiftsLoadingMessage />}
+
+        {giftsLoadingError && (
+          <Alert title="Bummer!" color="orange">
+            Something went wrong. Please try again later.
+          </Alert>
+        )}
+
+        {gifts.length > 0 && (
+          <Center>
+            <Stack spacing="4rem" w="100%" maw="48rem" px="md">
+              {gifts.map((gift, index) => (
+                <GiftResult key={index} gift={gift} />
+              ))}
+
               <Button
-                size="md"
-                variant="gradient"
-                gradient={{ from: "#8701F0", to: "#CC01FF" }}
-                type="submit"
-                disabled={giftsLoading}
+                onClick={() => {
+                  setGifts([]);
+                }}
               >
-                Find me a gift!
+                Find new gifts
               </Button>
-            </Center>
-          </Stack>
-        </Box>
+            </Stack>
+          </Center>
+        )}
       </Center>
-
-      {giftsLoading && (
-        <Center>
-          <Loader />
-        </Center>
-      )}
-      {giftsLoadingError && "Something went wrong. Please try again."}
-      {gifts.map((gift, index) => (
-        <GiftResult key={index} gift={gift} />
-      ))}
     </>
   );
 }
