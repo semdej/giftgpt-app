@@ -10,6 +10,10 @@ export default function App(props: AppProps) {
       <Head>
         <title>GiftGPT</title>
         <meta
+          name="description"
+          content="Find the perfect gift for your friend, family or colleague using the GPT-4 assistant."
+        />
+        <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />

@@ -1,13 +1,13 @@
 import {
-  createStyles,
-  Header as MantineHeader,
-  Group,
   ActionIcon,
   Container,
-  rem,
+  Group,
+  Header as MantineHeader,
   Text,
+  createStyles,
+  rem,
 } from "@mantine/core";
-import { FaTwitter, FaYoutube, FaInstagram } from "react-icons/fa";
+import { FaInstagram, FaTiktok } from "react-icons/fa";
 
 import { Logo } from "./Logo";
 
@@ -41,7 +41,7 @@ export function Header() {
       <Container className={classes.inner}>
         <Group>
           <Logo />
-          <Text component="h1" color="#fff" sx={{ fontSize: "1.75rem" }}>
+          <Text component="h1" color="#fff" sx={{ fontSize: "1.5rem" }}>
             Gift
             <Text
               component="span"
@@ -54,15 +54,17 @@ export function Header() {
         </Group>
 
         <Group spacing={0} className={classes.social} position="right" noWrap>
-          <ActionIcon size="lg">
-            <FaTwitter size="1.1rem" />
-          </ActionIcon>
-          <ActionIcon size="lg">
-            <FaYoutube size="1.1rem" />
-          </ActionIcon>
-          <ActionIcon size="lg">
-            <FaInstagram size="1.1rem" />
-          </ActionIcon>
+          <a href="https://www.instagram.com/giftsgpt/" target="_blank">
+            <ActionIcon size="lg">
+              <FaInstagram size="1.1rem" />
+            </ActionIcon>
+          </a>
+
+          <a href="https://www.tiktok.com/@giftgpt" target="_blank">
+            <ActionIcon size="lg">
+              <FaTiktok size="1.1rem" />
+            </ActionIcon>
+          </a>
         </Group>
       </Container>
     </MantineHeader>
