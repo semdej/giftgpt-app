@@ -37,12 +37,16 @@ export default async function handler(req: Request, res: NextApiResponse) {
       messages: [
         {
           role: "system",
+          content: "You are a helpful assistant",
+        },
+        {
+          role: "user",
           content:
             "Use the following format for each gift idea: 1. {gift idea} || {gift description}",
         },
         {
           role: "user",
-          content: `Create a list of 3 unique gift ideas for my ${relationship} who is ${age} years old and likes to ${hobbies}, exclude personalized gifts.`,
+          content: `Create a list of 3 unique gift ideas for my ${relationship} who is ${age} years old and likes to ${hobbies}, exclude personalized gifts. Do not include subscriptions, gift cards or experiences in the results.`,
         },
       ],
       max_tokens: 500,

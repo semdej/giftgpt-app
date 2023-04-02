@@ -6,16 +6,19 @@ import {
   Center,
   MultiSelect,
   NumberInput,
+  Select,
   Stack,
   Text,
 } from "@mantine/core";
 import { FormEvent, useState } from "react";
+import Confetti from "react-dom-confetti";
 
 import { Header } from "../components/Header";
 import { Hero } from "../components/Hero";
+import { GiftsLoadingMessage } from "../components/GiftLoadingMessage";
 import { Gift } from "../models/gift";
-import { GiftsLoadingMessage } from "@/components/GiftLoadingMessage";
-import Confetti from "react-dom-confetti";
+import { HOBBIES } from "../models/hobby";
+import { RELATIONSHIPS } from "../models/relationship";
 
 function GiftResult({ gift }: { gift: Gift }) {
   const link = `https://www.amazon.com/s?k=${gift.keywords.join(
@@ -49,14 +52,17 @@ function GiftResult({ gift }: { gift: Gift }) {
 }
 
 export default function Home() {
-  const [person, setPerson] = useState([
-    { value: "grandma", label: "Grandma" },
-    { value: "dad", label: "Dad" },
-  ]);
-  const [hobbies, setHobbies] = useState([
-    { value: "mountainbike", label: "Mountainbike" },
-    { value: "tennis", label: "Tennis" },
-  ]);
+  const [relationship, setRelationship] = useState(() =>
+    RELATIONSHIPS.map((relationship) => ({
+      value: relationship.toLowerCase(),
+      label: relationship,
+    }))
+  );
+
+  const [hobbies, setHobbies] = useState(() =>
+    HOBBIES.map((hobby) => ({ value: hobby.toLowerCase(), label: hobby }))
+  );
+
   const [gifts, setGifts] = useState<Gift[]>([]);
   const [giftsLoading, setGiftsLoading] = useState(false);
   const [giftsLoadingError, setGiftsLoadingError] = useState(false);
@@ -107,20 +113,19 @@ export default function Home() {
                 <Text ta="center" fw={500} size="md" color="white">
                   🤝 I'M LOOKING FOR A GIFT FOR MY
                 </Text>
-                <MultiSelect
+                <Select
                   mt={15}
                   size="lg"
                   w="100%"
-                  data={person}
+                  data={relationship}
                   name="relationship"
-                  placeholder="Friend, family, colleague, etc."
+                  placeholder="Select a relationship or type a new one"
                   searchable
-                  maxSelectedValues={1}
                   creatable
                   getCreateLabel={(query) => `+ Create ${query}`}
                   onCreate={(query) => {
                     const item = { value: query, label: query };
-                    setPerson((current) => [...current, item]);
+                    setRelationship((current) => [...current, item]);
                     return item;
                   }}
                 />
@@ -143,7 +148,7 @@ export default function Home() {
 
               <Stack spacing=".5rem">
                 <Text ta="center" fw={500} size="md" color="white">
-                  ❤️ AND LOVES TO
+                  ❤️ AND LOVES (TO)
                 </Text>
                 <MultiSelect
                   mt={15}
@@ -151,7 +156,7 @@ export default function Home() {
                   size="lg"
                   data={hobbies}
                   name="hobbies"
-                  placeholder="Hike, mountainbike, game, etc."
+                  placeholder="Select a hobby or type a new one"
                   searchable
                   creatable
                   maxSelectedValues={3}
