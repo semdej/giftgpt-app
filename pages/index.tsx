@@ -6,10 +6,13 @@ import {
   Loader,
   Text,
   Center,
+  Stack,
+  Box,
 } from "@mantine/core";
 
 import { Hero } from "../components/Hero";
 import { Gift } from "../models/gift";
+import { Header } from "../components/Header";
 
 function GiftResult({ gift }: { gift: Gift }) {
   const link = `https://www.amazon.com/s?k=${gift.keywords.join(
@@ -72,81 +75,87 @@ export default function Home() {
 
   return (
     <>
+      <Header />
+
       <Hero />
 
-      <Center>
-        <form onSubmit={handleSubmit}>
-          <Text ta="center" fw={500} size="sm" color="white">
-            🤝 I'M LOOKING FOR A GIFT FOR MY
-          </Text>
-          <MultiSelect
-            mt={15}
-            size="lg"
-            w={400}
-            maw="100%"
-            data={person}
-            name="relationship"
-            placeholder="Friend, family, colleague, etc."
-            searchable
-            maxSelectedValues={1}
-            creatable
-            getCreateLabel={(query) => `+ Create ${query}`}
-            onCreate={(query) => {
-              const item = { value: query, label: query };
-              setPerson((current) => [...current, item]);
-              return item;
-            }}
-          />
+      <Center pb="4rem">
+        <Box component="form" onSubmit={handleSubmit} w="100%" maw="32rem">
+          <Stack spacing="3rem" px="md">
+            <Stack spacing=".5rem">
+              <Text ta="center" fw={500} size="md" color="white">
+                🤝 I'M LOOKING FOR A GIFT FOR MY
+              </Text>
+              <MultiSelect
+                mt={15}
+                size="lg"
+                w="100%"
+                data={person}
+                name="relationship"
+                placeholder="Friend, family, colleague, etc."
+                searchable
+                maxSelectedValues={1}
+                creatable
+                getCreateLabel={(query) => `+ Create ${query}`}
+                onCreate={(query) => {
+                  const item = { value: query, label: query };
+                  setPerson((current) => [...current, item]);
+                  return item;
+                }}
+              />
+            </Stack>
 
-          <Text mt={30} ta="center" fw={500} size="sm" color="white">
-            🧓 WHO IS
-          </Text>
-          <NumberInput
-            mt={15}
-            size="lg"
-            w={400}
-            maw="100%"
-            name="age"
-            max={120}
-            min={0}
-            placeholder="25 years old"
-          />
+            <Stack spacing=".5rem">
+              <Text ta="center" fw={500} size="md" color="white">
+                🧓 WHO IS
+              </Text>
+              <NumberInput
+                mt={15}
+                size="lg"
+                w="100%"
+                name="age"
+                max={120}
+                min={0}
+                placeholder="25 years old"
+              />
+            </Stack>
 
-          <Text mt={30} ta="center" fw={500} size="sm" color="white">
-            ❤️ AND LOVES TO
-          </Text>
-          <MultiSelect
-            mt={15}
-            w={400}
-            size="lg"
-            maw="100%"
-            data={hobbies}
-            name="hobbies"
-            placeholder="Hike, mountainbike, game, etc."
-            searchable
-            creatable
-            maxSelectedValues={3}
-            getCreateLabel={(query) => `+ Create ${query}`}
-            onCreate={(query) => {
-              const item = { value: query, label: query };
-              setHobbies((current) => [...current, item]);
-              return item;
-            }}
-          />
+            <Stack spacing=".5rem">
+              <Text ta="center" fw={500} size="md" color="white">
+                ❤️ AND LOVES TO
+              </Text>
+              <MultiSelect
+                mt={15}
+                w="100%"
+                size="lg"
+                data={hobbies}
+                name="hobbies"
+                placeholder="Hike, mountainbike, game, etc."
+                searchable
+                creatable
+                maxSelectedValues={3}
+                getCreateLabel={(query) => `+ Create ${query}`}
+                onCreate={(query) => {
+                  const item = { value: query, label: query };
+                  setHobbies((current) => [...current, item]);
+                  return item;
+                }}
+              />
+            </Stack>
 
-          <Center>
-            <Button
-              size="md"
-              variant="gradient"
-              gradient={{ from: "#8701F0", to: "#CC01FF" }}
-              type="submit"
-              disabled={giftsLoading}
-              mt={50}
-            >
-              Find me a gift!
-            </Button>
-          </Center>
-        </form>
+            <Center>
+              <Button
+                size="md"
+                variant="gradient"
+                gradient={{ from: "#8701F0", to: "#CC01FF" }}
+                type="submit"
+                disabled={giftsLoading}
+              >
+                Find me a gift!
+              </Button>
+            </Center>
+          </Stack>
+        </Box>
       </Center>
 
       {giftsLoading && (
