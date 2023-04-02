@@ -1,6 +1,12 @@
-import Head from "next/head";
 import { FormEvent, useState } from "react";
-import { Button, MultiSelect, NumberInput, Loader } from "@mantine/core";
+import {
+  Button,
+  MultiSelect,
+  NumberInput,
+  Loader,
+  Text,
+  Center,
+} from "@mantine/core";
 import { Hero } from "../components/Hero";
 
 function GiftResult({ gift }: { gift: string }) {
@@ -28,7 +34,7 @@ export default function Home() {
     { value: "dad", label: "Dad" },
   ]);
   const [hobbies, setHobbies] = useState([
-    { value: "mountainbike", label: "Mountainbiking" },
+    { value: "mountainbike", label: "Mountainbike" },
     { value: "tennis", label: "Tennis" },
   ]);
   const [gifts, setGifts] = useState([]);
@@ -69,18 +75,21 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>Gift Ideas powered by GPT</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
       <Hero />
-      <main>
+
+      <Center>
         <form onSubmit={handleSubmit}>
+          <Text ta="center" fw={500} size="sm" color="white">
+            🤝 I'M LOOKING FOR A GIFT FOR MY
+          </Text>
           <MultiSelect
-            label="For who?"
+            mt={15}
+            size="lg"
+            w={400}
+            maw="100%"
             data={person}
             name="relationship"
-            placeholder="Select person"
+            placeholder="Friend, family, colleague, etc."
             searchable
             maxSelectedValues={1}
             creatable
@@ -91,12 +100,32 @@ export default function Home() {
               return item;
             }}
           />
-          <NumberInput label="Age" name="age" placeholder="Enter age" />
+
+          <Text mt={30} ta="center" fw={500} size="sm" color="white">
+            🧓 WHO IS
+          </Text>
+          <NumberInput
+            mt={15}
+            size="lg"
+            w={400}
+            maw="100%"
+            name="age"
+            max={120}
+            min={0}
+            placeholder="25 years old"
+          />
+
+          <Text mt={30} ta="center" fw={500} size="sm" color="white">
+            ❤️ AND LOVES TO
+          </Text>
           <MultiSelect
-            label="Hobbies"
+            mt={15}
+            w={400}
+            size="lg"
+            maw="100%"
             data={hobbies}
             name="hobbies"
-            placeholder="Select hobbies"
+            placeholder="Hike, mountainbike, game, etc."
             searchable
             creatable
             maxSelectedValues={3}
@@ -107,16 +136,31 @@ export default function Home() {
               return item;
             }}
           />
-          <Button type="submit" disabled={giftsLoading}>
-            Submit
-          </Button>
+
+          <Center>
+            <Button
+              size="md"
+              variant="gradient"
+              gradient={{ from: "#8701F0", to: "#CC01FF" }}
+              type="submit"
+              disabled={giftsLoading}
+              mt={50}
+            >
+              Find me a gift!
+            </Button>
+          </Center>
         </form>
-        {giftsLoading && <Loader />}
-        {giftsLoadingError && "Something went wrong. Please try again."}
-        {gifts.map((gift, index) => (
-          <GiftResult key={index} gift={gift} />
-        ))}
-      </main>
+      </Center>
+
+      {giftsLoading && (
+        <Center>
+          <Loader />
+        </Center>
+      )}
+      {giftsLoadingError && "Something went wrong. Please try again."}
+      {gifts.map((gift, index) => (
+        <GiftResult key={index} gift={gift} />
+      ))}
     </>
   );
 }

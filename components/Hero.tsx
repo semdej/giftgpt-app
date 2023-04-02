@@ -1,11 +1,4 @@
-import {
-  createStyles,
-  Title,
-  Text,
-  Button,
-  Container,
-  rem,
-} from "@mantine/core";
+import { createStyles, Title, Text, Container, rem } from "@mantine/core";
 import { Dots } from "./Dots";
 
 const useStyles = createStyles((theme) => ({
@@ -102,43 +95,46 @@ export function Hero() {
   const { classes } = useStyles();
 
   return (
-    <Container className={classes.wrapper} size={1400}>
+    <div className={classes.wrapper}>
       <Dots className={classes.dots} style={{ left: 0, top: 0 }} />
       <Dots className={classes.dots} style={{ left: 60, top: 0 }} />
       <Dots className={classes.dots} style={{ left: 0, top: 140 }} />
       <Dots className={classes.dots} style={{ right: 0, top: 60 }} />
 
-      <div className={classes.inner}>
-        <Title className={classes.title}>
-          Automated AI{" "}
-          <Text component="span" className={classes.highlight} inherit>
-            code reviews
+      <Container className={classes.inner}>
+        <Title fw={400} className={classes.title}>
+          Find unique{" "}
+          <Text
+            fw={900}
+            component="span"
+            variant="gradient"
+            gradient={{ from: "#FF00E5", to: "#AD00FF", deg: 45 }}
+            inherit
+          >
+            gift ideas
           </Text>{" "}
-          for any stack
+          using the power of{" "}
+          <Text
+            fw={900}
+            component="span"
+            variant="gradient"
+            gradient={{ from: "#0085FF", to: "#19C5DC", deg: 45 }}
+            inherit
+          >
+            GPT-4
+          </Text>
         </Title>
 
         <Container p={0} size={600}>
           <Text size="lg" color="dimmed" className={classes.description}>
-            Build more reliable software with AI companion. AI is also trained
-            to detect lazy developers who do nothing and just complain on
-            Twitter.
+            Find the perfect gift for your friend, family or colleague using the
+            GPT-4 assistant. This tool allows you to easily search for gifts
+            using the GPT-4 model which is enriched using content from over the
+            whole internet! You’ll never have to stress finding a gift for a
+            birthday again!
           </Text>
         </Container>
-
-        <div className={classes.controls}>
-          <Button
-            className={classes.control}
-            size="lg"
-            variant="default"
-            color="gray"
-          >
-            Book a demo
-          </Button>
-          <Button className={classes.control} size="lg">
-            Purchase a license
-          </Button>
-        </div>
-      </div>
-    </Container>
+      </Container>
+    </div>
   );
 }
