@@ -15,6 +15,7 @@ import { Header } from "../components/Header";
 import { Hero } from "../components/Hero";
 import { Gift } from "../models/gift";
 import { GiftsLoadingMessage } from "@/components/GiftLoadingMessage";
+import Confetti from "react-dom-confetti";
 
 function GiftResult({ gift }: { gift: Gift }) {
   const link = `https://www.amazon.com/s?k=${gift.keywords.join(
@@ -203,6 +204,22 @@ export default function Home() {
             </Stack>
           </Center>
         )}
+
+        <Confetti
+          active={giftsLoading}
+          config={{
+            angle: 95,
+            spread: 92,
+            startVelocity: 40,
+            elementCount: 86,
+            dragFriction: 0.11,
+            duration: 1570,
+            stagger: 2,
+            width: "8px",
+            height: "8px",
+            colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"],
+          }}
+        />
       </Center>
     </>
   );
