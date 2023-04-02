@@ -31,16 +31,16 @@ function GiftResult({ gift }: { gift: Gift }) {
       <Text size="sm" color="dimmed">
         {gift.description}
       </Text>
-
       <Button
         component="a"
         target="_blank"
         href={link}
-        variant="light"
-        color="blue"
         fullWidth
         mt="md"
         radius="md"
+        variant="gradient"
+        gradient={{ from: "#8701F0", to: "#CC01FF" }}
+        maw={250}
       >
         Check available products
       </Button>
@@ -94,7 +94,7 @@ export default function Home() {
   }
 
   return (
-    <>
+    <Box style={{ overflow: "hidden", minHeight: "100vh" }}>
       <Header />
 
       <Hero />
@@ -221,6 +221,6 @@ export default function Home() {
           }}
         />
       </Center>
-    </>
+    </Box>
   );
 }

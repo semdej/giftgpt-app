@@ -1,15 +1,12 @@
-import { useState } from "react";
 import {
   createStyles,
   Header as MantineHeader,
   Group,
   ActionIcon,
   Container,
-  Burger,
   rem,
   Text,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import { FaTwitter, FaYoutube, FaInstagram } from "react-icons/fa";
 
 import { Logo } from "./Logo";
@@ -37,7 +34,6 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export function Header() {
-  const [opened, { toggle }] = useDisclosure(false);
   const { classes } = useStyles();
 
   return (
@@ -45,7 +41,6 @@ export function Header() {
       <Container className={classes.inner}>
         <Group>
           <Logo />
-
           <Text component="h1" color="#fff" sx={{ fontSize: "1.75rem" }}>
             Gift
             <Text
