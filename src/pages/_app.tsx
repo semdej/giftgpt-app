@@ -1,6 +1,7 @@
 import { AppProps } from "next/app";
 import Head from "next/head";
 import { MantineProvider } from "@mantine/core";
+import Script from "next/script";
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
@@ -59,6 +60,20 @@ export default function App(props: AppProps) {
       >
         <Component {...pageProps} />
       </MantineProvider>
+
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=G-T51FLHDJZR"
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){window.dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-T51FLHDJZR');
+        `}
+      </Script>
     </>
   );
 }
