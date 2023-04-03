@@ -17,8 +17,9 @@ const LOADING_MESSAGES = [
 ];
 
 export function GiftsLoadingMessage() {
-  const [currentLoadingMessageIndex, setCurrentLoadingMessageIndex] =
-    useState(0);
+  const [currentLoadingMessageIndex, setCurrentLoadingMessageIndex] = useState(
+    Math.floor(Math.random() * LOADING_MESSAGES.length)
+  );
 
   useEffect(() => {
     const intervalId = setInterval(() => {

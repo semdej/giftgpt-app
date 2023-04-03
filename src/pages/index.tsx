@@ -83,8 +83,6 @@ export default function Home() {
     Error | ZodError | null
   >(null);
 
-  console.log("giftsLoadingError", giftsLoadingError);
-
   async function handleSubmit(values: z.infer<typeof PromptGiftsSchema>) {
     try {
       setGifts([]);

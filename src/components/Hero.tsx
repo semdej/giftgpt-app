@@ -125,7 +125,7 @@ export function Hero() {
           </Text>
         </Title>
 
-        <Container p={0} size={600}>
+        <Container p={0} mt="xl" size={600}>
           <Text size="lg" color="dimmed" className={classes.description}>
             Find the perfect gift for your friend, family or colleague using the
             GPT-4 assistant. This tool allows you to easily search for gifts
