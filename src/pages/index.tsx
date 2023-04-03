@@ -85,7 +85,7 @@ export default function Home() {
     HOBBIES.map((hobby) => ({ value: hobby.toLowerCase(), label: hobby }))
   );
 
-  const [gifts, setGifts] = useState<Gift[]>([]);
+  const [gifts, setGifts] = useState<Gift[] | null>(null);
   const [giftsLoading, setGiftsLoading] = useState(false);
   const [giftsLoadingError, setGiftsLoadingError] = useState<
     Error | ZodError | null
@@ -93,7 +93,7 @@ export default function Home() {
 
   async function handleSubmit(values: z.infer<typeof PromptGiftsSchema>) {
     try {
-      setGifts([]);
+      setGifts(null);
       setGiftsLoadingError(null);
       setGiftsLoading(true);
 
@@ -133,7 +133,7 @@ export default function Home() {
       <Hero />
 
       <Center component={Stack} pb="4rem" spacing="xl">
-        {!giftsLoading && gifts.length === 0 && (
+        {!giftsLoading && !gifts && (
           <Box
             component="form"
             onSubmit={form.onSubmit(handleSubmit)}
@@ -224,11 +224,11 @@ export default function Home() {
           </Alert>
         )}
 
-        {gifts.length > 0 && (
+        {gifts && (
           <Center>
             <Stack maw="48rem" px="md" spacing="2rem">
               <Group w="100%">
-                <ActionIcon onClick={() => setGifts([])} size="xl">
+                <ActionIcon onClick={() => setGifts(null)} size="xl">
                   <FaArrowLeft size="1.5rem" />
                 </ActionIcon>
 
@@ -240,9 +240,19 @@ export default function Home() {
                   <GiftResult key={index} gift={gift} />
                 ))}
 
+                {gifts.length === 0 && (
+                  <Alert
+                    color="violet"
+                    variant="outline"
+                    title="No results found!"
+                  >
+                    Could not find any gifts for your prompt. Try another one!
+                  </Alert>
+                )}
+
                 <Button
                   onClick={() => {
-                    setGifts([]);
+                    setGifts(null);
                   }}
                 >
                   Find new gifts
@@ -257,11 +267,11 @@ export default function Home() {
           config={{
             angle: 95,
             spread: 92,
-            startVelocity: 40,
-            elementCount: 86,
+            startVelocity: 60,
+            elementCount: 100,
             dragFriction: 0.11,
-            duration: 1570,
-            stagger: 2,
+            duration: 3000,
+            stagger: 4,
             width: "8px",
             height: "8px",
             colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"],
@@ -270,7 +280,7 @@ export default function Home() {
       </Center>
 
       <Center pb="4rem">
-        <Stack maw="92rem" px="2rem" spacing="4rem">
+        <Stack maw="92rem" px="1rem" spacing="4rem">
           <SimpleGrid
             cols={3}
             spacing="xl"
