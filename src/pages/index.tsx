@@ -83,6 +83,8 @@ export default function Home() {
     Error | ZodError | null
   >(null);
 
+  console.log("giftsLoadingError", giftsLoadingError);
+
   async function handleSubmit(values: z.infer<typeof PromptGiftsSchema>) {
     try {
       setGifts([]);
@@ -211,7 +213,7 @@ export default function Home() {
           <Alert title="Bummer!" color="orange">
             {(giftsLoadingError instanceof ZodError &&
               giftsLoadingError.issues[0]?.message) ||
-              giftsLoadingError.name ||
+              giftsLoadingError.message ||
               "Something went wrong. Please try again later."}
           </Alert>
         )}
