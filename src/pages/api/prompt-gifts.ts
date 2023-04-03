@@ -28,7 +28,8 @@ export default async function handler(
           messages: [
             {
               role: "system",
-              content: "You are a helpful assistant",
+              content:
+                "You are a helpful assistant for finding gifts. You do not return: experiences, courses, personalized gifts, subscriptions, gift cards.",
             },
             {
               role: "user",
@@ -37,7 +38,7 @@ export default async function handler(
             },
             {
               role: "user",
-              content: `Create a list of 3 unique gift ideas for my ${relationship} who is ${age} years old and likes to ${joinedHobbies}. Exclude personalized gifts. Do not include subscriptions, gift cards or experiences in the results.`,
+              content: `Create a list of 3 unique gift ideas for my ${relationship} who is ${age} years old and likes to ${joinedHobbies}.`,
             },
           ],
           max_tokens: 500,
