@@ -28,6 +28,11 @@ export default function App(props: AppProps) {
         />
         <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" />
         <meta property="og:image" content="/og-image.jpg" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:type" content="image/jpeg" />
+        <meta property="og:site_name" content="GiftGPT" />
+        <meta property="og:locale" content="en_US" />
         <meta
           property="og:title"
           content="GiftGPT | Find unique gift ideas using the power of GPT-4"
