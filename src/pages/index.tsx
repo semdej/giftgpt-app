@@ -1,27 +1,31 @@
 import {
+  ActionIcon,
   Alert,
   Box,
   Button,
   Card,
   Center,
+  Group,
   MultiSelect,
   NumberInput,
   Select,
   Stack,
   Text,
+  Title,
 } from "@mantine/core";
 import { useState } from "react";
 import Confetti from "react-dom-confetti";
 
+import { useForm, zodResolver } from "@mantine/form";
+import { FaArrowLeft } from "react-icons/fa";
+import { ZodError, z } from "zod";
+import { GiftsLoadingMessage } from "../components/GiftLoadingMessage";
 import { Header } from "../components/Header";
 import { Hero } from "../components/Hero";
-import { GiftsLoadingMessage } from "../components/GiftLoadingMessage";
 import { Gift } from "../models/gift";
 import { HOBBIES } from "../models/hobby";
 import { RELATIONSHIPS } from "../models/relationship";
 import { PromptGiftsSchema } from "../validation/prompt-gifts";
-import { useForm, zodResolver } from "@mantine/form";
-import { ZodError, z } from "zod";
 
 function GiftResult({ gift }: { gift: Gift }) {
   const link = `https://www.amazon.com/s?k=${gift.keywords.join(
@@ -218,18 +222,28 @@ export default function Home() {
 
         {gifts.length > 0 && (
           <Center>
-            <Stack spacing="4rem" w="100%" maw="48rem" px="md">
-              {gifts.map((gift, index) => (
-                <GiftResult key={index} gift={gift} />
-              ))}
+            <Stack maw="48rem" px="md" spacing="2rem">
+              <Group w="100%">
+                <ActionIcon onClick={() => setGifts([])} size="xl">
+                  <FaArrowLeft size="1.5rem" />
+                </ActionIcon>
 
-              <Button
-                onClick={() => {
-                  setGifts([]);
-                }}
-              >
-                Find new gifts
-              </Button>
+                <Title>Your gifts</Title>
+              </Group>
+
+              <Stack spacing="4rem" w="100%">
+                {gifts.map((gift, index) => (
+                  <GiftResult key={index} gift={gift} />
+                ))}
+
+                <Button
+                  onClick={() => {
+                    setGifts([]);
+                  }}
+                >
+                  Find new gifts
+                </Button>
+              </Stack>
             </Stack>
           </Center>
         )}
