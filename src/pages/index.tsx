@@ -280,7 +280,7 @@ export default function Home() {
           >
             <FeatureCard
               title="Smart GPT search"
-              description="Our website utilizes a state-of-the-art AI algorithm to generate personalized gift recommendations that are tailored to the interests and preferences of the recipient. Our AI algorithm takes into account various factors such as age, gender, hobbies, and past purchasing behavior to provide you with unique and innovative gift ideas."
+              description="Our website utilizes a state-of-the-art AI algorithm to generate personalized gift recommendations that are tailored to the interests and preferences of the recipient. Our AI algorithm takes into account various factors such as age, gender and hobbies to provide you with unique and innovative gift ideas."
               icon={<FaMicrochip size="2rem" />}
             />
 
