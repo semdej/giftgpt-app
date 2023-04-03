@@ -36,14 +36,14 @@ export default function App(props: AppProps) {
         <meta property="og:locale" content="en_US" />
         <meta
           property="og:title"
-          content="GiftGPT | Find unique gift ideas using the power of GPT-4"
+          content="GiftGPT | Find unique gift ideas using the power of GPT"
         />
         <meta property="og:url" content="https://gift-gpt.com" />
         <meta property="og:type" content="website" />
-        <title>GiftGPT | Find unique gift ideas using the power of GPT-4</title>
+        <title>GPT AI Gift Finder | GiftGPT</title>
         <meta
           name="description"
-          content="Find the perfect gift for your friend, family or colleague using the GPT-4 assistant. This tool allows you to easily search for gifts using the GPT-4 model which is enriched using content from over the whole internet!"
+          content="Find the perfect gift for your friend, family or colleague using the GPT assistant. Use the power of AI to surprise your loved ones!"
         />
         <meta
           name="viewport"

@@ -9,6 +9,7 @@ import {
   MultiSelect,
   NumberInput,
   Select,
+  SimpleGrid,
   Stack,
   Text,
   Title,
@@ -16,9 +17,12 @@ import {
 import { useState } from "react";
 import Confetti from "react-dom-confetti";
 
+import { FeatureCard } from "@/components/FeatureCard";
 import { useForm, zodResolver } from "@mantine/form";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaGift, FaHeart, FaMicrochip } from "react-icons/fa";
+import { GiMeditation } from "react-icons/gi";
 import { ZodError, z } from "zod";
+
 import { GiftsLoadingMessage } from "../components/GiftLoadingMessage";
 import { Header } from "../components/Header";
 import { Hero } from "../components/Hero";
@@ -263,6 +267,52 @@ export default function Home() {
             colors: ["#a864fd", "#29cdff", "#78ff44", "#ff718d", "#fdff6a"],
           }}
         />
+      </Center>
+
+      <Center pb="4rem">
+        <Stack maw="92rem" px="2rem" spacing="4rem">
+          <SimpleGrid
+            cols={3}
+            spacing="xl"
+            mt={50}
+            breakpoints={[{ maxWidth: "md", cols: 1 }]}
+            w="100%"
+          >
+            <FeatureCard
+              title="Smart GPT search"
+              description="Our website utilizes a state-of-the-art AI algorithm to generate personalized gift recommendations that are tailored to the interests and preferences of the recipient. Our AI algorithm takes into account various factors such as age, gender, hobbies, and past purchasing behavior to provide you with unique and innovative gift ideas."
+              icon={<FaMicrochip size="2rem" />}
+            />
+
+            <FeatureCard
+              title="No more stress!"
+              description="We know that finding the perfect gift can be a time-consuming and overwhelming task, which is why we are dedicated to providing you with a hassle-free and enjoyable gift-buying experience. Our AI-powered gift recommendations are constantly updated and refined to ensure that they are always relevant and up-to-date."
+              icon={<FaHeart size="2rem" />}
+            />
+
+            <FeatureCard
+              title="The perfect gift every time"
+              description="Our goal at GiftGPT is to provide you with gift recommendations that are both practical and functional, as well as thoughtful and unique. Whether you are looking for a gift for a family member, friend, or colleague, our AI-powered gift recommendations will ensure that your gift is well-received and appreciated."
+              icon={<FaGift size="2rem" />}
+            />
+          </SimpleGrid>
+
+          <Text
+            size="lg"
+            color="dimmed"
+            ta="center"
+            w="100%"
+            maw="46rem"
+            mx="auto"
+          >
+            So, next time you are struggling to find the perfect gift, turn to
+            GiftGPT for personalized gift recommendations that are tailored to
+            the recipient's interests and preferences. Our AI-powered gift
+            recommendations will help you find a gift that is sure to make a
+            lasting impression and create a memorable experience for your loved
+            one.
+          </Text>
+        </Stack>
       </Center>
     </Box>
   );

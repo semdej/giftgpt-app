@@ -121,17 +121,17 @@ export function Hero() {
             gradient={{ from: "#0085FF", to: "#19C5DC", deg: 45 }}
             inherit
           >
-            GPT-4
+            GPT
           </Text>
         </Title>
 
         <Container p={0} mt="xl" size={600}>
           <Text size="lg" color="dimmed" className={classes.description}>
             Find the perfect gift for your friend, family or colleague using the
-            GPT-4 assistant. This tool allows you to easily search for gifts
-            using the GPT-4 model which is enriched using content from over the
-            whole internet! You’ll never have to stress finding a gift for a
-            birthday again!
+            GPT assistant. This tool allows you to easily search for gifts using
+            the GPT model which is enriched using content from over the whole
+            internet! You’ll never have to stress finding a gift for a birthday
+            again!
           </Text>
         </Container>
       </Container>
