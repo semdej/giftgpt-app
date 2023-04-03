@@ -10,7 +10,7 @@ import {
   Stack,
   Text,
 } from "@mantine/core";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 import Confetti from "react-dom-confetti";
 
 import { Header } from "../components/Header";
@@ -19,6 +19,9 @@ import { GiftsLoadingMessage } from "../components/GiftLoadingMessage";
 import { Gift } from "../models/gift";
 import { HOBBIES } from "../models/hobby";
 import { RELATIONSHIPS } from "../models/relationship";
+import { PromptGiftsSchema } from "../validation/prompt-gifts";
+import { useForm, zodResolver } from "@mantine/form";
+import { ZodError, z } from "zod";
 
 function GiftResult({ gift }: { gift: Gift }) {
   const link = `https://www.amazon.com/s?k=${gift.keywords.join(
@@ -52,6 +55,17 @@ function GiftResult({ gift }: { gift: Gift }) {
 }
 
 export default function Home() {
+  const form = useForm<z.infer<typeof PromptGiftsSchema>>({
+    validate: zodResolver(PromptGiftsSchema),
+    validateInputOnBlur: true,
+    validateInputOnChange: true,
+    initialValues: {
+      relationship: "",
+      age: "",
+      hobbies: [],
+    } as any,
+  });
+
   const [relationship, setRelationship] = useState(() =>
     RELATIONSHIPS.map((relationship) => ({
       value: relationship.toLowerCase(),
@@ -65,37 +79,42 @@ export default function Home() {
 
   const [gifts, setGifts] = useState<Gift[]>([]);
   const [giftsLoading, setGiftsLoading] = useState(false);
-  const [giftsLoadingError, setGiftsLoadingError] = useState(false);
+  const [giftsLoadingError, setGiftsLoadingError] = useState<
+    Error | ZodError | null
+  >(null);
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    const relationship = formData.get("relationship")?.toString().trim();
-    const age = formData.get("age")?.toString().trim();
-    const hobbies = formData.get("hobbies")?.toString().trim();
+  async function handleSubmit(values: z.infer<typeof PromptGiftsSchema>) {
+    try {
+      setGifts([]);
+      setGiftsLoadingError(null);
+      setGiftsLoading(true);
 
-    if (relationship && age && hobbies) {
-      try {
-        setGifts([]);
-        setGiftsLoadingError(false);
-        setGiftsLoading(true);
+      const response = await fetch("/api/prompt-gifts", {
+        method: "POST",
+        body: JSON.stringify(values),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-        const url = new URL("/api/openai", window.location.href);
-        url.searchParams.append("relationship", relationship);
-        url.searchParams.append("age", age);
-        url.searchParams.append("hobbies", hobbies);
+      const body = await response.json();
 
-        const response = await fetch(url.pathname + url.search);
-        const body = await response.json();
-        setGifts(body.gifts);
-      } catch (error) {
-        console.error(error);
-        setGiftsLoadingError(true);
-      } finally {
-        setGiftsLoading(false);
+      if (!response.ok) {
+        if (body.error?.name === "ZodError") {
+          throw new ZodError(body.error.issues);
+        }
+
+        throw new Error(body.error || "An unknown error occurred.");
       }
-    } else {
-      setGiftsLoadingError(true);
+
+      setGifts(body.gifts);
+    } catch (error) {
+      console.error(error);
+      setGiftsLoadingError(
+        (error as Error | ZodError) || new Error("An unknown error occurred.")
+      );
+    } finally {
+      setGiftsLoading(false);
     }
   }
 
@@ -107,18 +126,23 @@ export default function Home() {
 
       <Center component={Stack} pb="4rem" spacing="xl">
         {!giftsLoading && gifts.length === 0 && (
-          <Box component="form" onSubmit={handleSubmit} w="100%" maw="32rem">
+          <Box
+            component="form"
+            onSubmit={form.onSubmit(handleSubmit)}
+            w="100%"
+            maw="32rem"
+          >
             <Stack spacing="3rem" px="md">
               <Stack spacing=".5rem">
                 <Text ta="center" fw={500} size="md" color="white">
                   🤝 I'M LOOKING FOR A GIFT FOR MY
                 </Text>
                 <Select
+                  {...form.getInputProps("relationship")}
                   mt={15}
                   size="lg"
                   w="100%"
                   data={relationship}
-                  name="relationship"
                   placeholder="Select a relationship or type a new one"
                   searchable
                   creatable
@@ -133,15 +157,13 @@ export default function Home() {
 
               <Stack spacing=".5rem">
                 <Text ta="center" fw={500} size="md" color="white">
-                  🧓 WHO IS
+                  🧓 WITH AN AGE OF
                 </Text>
                 <NumberInput
+                  {...form.getInputProps("age")}
                   mt={15}
                   size="lg"
                   w="100%"
-                  name="age"
-                  max={120}
-                  min={0}
                   placeholder="25 years old"
                 />
               </Stack>
@@ -151,15 +173,14 @@ export default function Home() {
                   ❤️ AND LOVES (TO)
                 </Text>
                 <MultiSelect
+                  {...form.getInputProps("hobbies")}
                   mt={15}
                   w="100%"
                   size="lg"
                   data={hobbies}
-                  name="hobbies"
                   placeholder="Select a hobby or type a new one"
                   searchable
                   creatable
-                  maxSelectedValues={3}
                   getCreateLabel={(query) => `+ Create ${query}`}
                   onCreate={(query) => {
                     const item = { value: query, label: query };
@@ -188,7 +209,10 @@ export default function Home() {
 
         {giftsLoadingError && (
           <Alert title="Bummer!" color="orange">
-            Something went wrong. Please try again later.
+            {(giftsLoadingError instanceof ZodError &&
+              giftsLoadingError.issues[0]?.message) ||
+              giftsLoadingError.name ||
+              "Something went wrong. Please try again later."}
           </Alert>
         )}
 

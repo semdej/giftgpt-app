@@ -1,9 +1,9 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Configuration, OpenAIApi } from "openai";
-import { z, ZodError } from "zod";
+import { ZodError } from "zod";
 
 import { parseGiftResponse } from "../../models/gift";
+import { PromptGiftsSchema } from "../../validation/prompt-gifts";
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -11,26 +11,14 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-interface Request extends NextApiRequest {
-  query: {
-    relationship: string;
-    age: string;
-    hobbies: string;
-  };
-}
-
-const QuerySchema = z.object({
-  relationship: z.string().max(100, "Relationship too long"),
-  age: z.coerce
-    .number()
-    .min(0, `Age can't be negative`)
-    .max(150, `Age can't be over 150`),
-  hobbies: z.string().max(100, "Hobbies too long"),
-});
-
-export default async function handler(req: Request, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   try {
-    const { age, hobbies, relationship } = QuerySchema.parse(req.query);
+    const { age, hobbies, relationship } = PromptGiftsSchema.parse(req.body);
+
+    const joinedHobbies = hobbies.join(", ");
 
     const completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
@@ -46,7 +34,7 @@ export default async function handler(req: Request, res: NextApiResponse) {
         },
         {
           role: "user",
-          content: `Create a list of 3 unique gift ideas for my ${relationship} who is ${age} years old and likes to ${hobbies}, exclude personalized gifts. Do not include subscriptions, gift cards or experiences in the results.`,
+          content: `Create a list of 3 unique gift ideas for my ${relationship} who is ${age} years old and likes to ${joinedHobbies}. Exclude personalized gifts. Do not include subscriptions, gift cards or experiences in the results.`,
         },
       ],
       max_tokens: 500,
@@ -66,7 +54,7 @@ export default async function handler(req: Request, res: NextApiResponse) {
     console.error(error);
 
     if (error instanceof ZodError) {
-      return res.status(400).json({ error: error.errors[0].message });
+      return res.status(400).json({ error });
     }
 
     return res.status(500).json({ error: "An unknown error occurred" });
