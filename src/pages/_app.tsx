@@ -8,10 +8,36 @@ export default function App(props: AppProps) {
   return (
     <>
       <Head>
-        <title>GiftGPT</title>
+        <link rel="shortcut icon" href="/favicons/favicon.ico" />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/favicons/apple-touch-icon.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/favicons/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/favicons/favicon-16x16.png"
+        />
+        <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" />
+        <meta property="og:image" content="/og-image.jpg" />
+        <meta
+          property="og:title"
+          content="GiftGPT | Find unique gift ideas using the power of GPT-4"
+        />
+        <meta property="og:url" content="https://gift-gpt.com" />
+        <meta property="og:type" content="website" />
+        <title>GiftGPT | Find unique gift ideas using the power of GPT-4</title>
         <meta
           name="description"
-          content="Find the perfect gift for your friend, family or colleague using the GPT-4 assistant."
+          content="Find the perfect gift for your friend, family or colleague using the GPT-4 assistant. This tool allows you to easily search for gifts using the GPT-4 model which is enriched using content from over the whole internet!"
         />
         <meta
           name="viewport"
