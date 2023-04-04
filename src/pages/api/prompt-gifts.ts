@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { backOff } from "exponential-backoff";
 import { Configuration, OpenAIApi } from "openai";
 import { ZodError } from "zod";
+import * as Sentry from "@sentry/nextjs";
 
 import { parseGiftResponse } from "../../models/gift";
 import { PromptGiftsSchema } from "../../validation/prompt-gifts";
@@ -17,6 +18,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
+    Sentry.setContext("request", req);
+
     const { age, hobbies, relationship } = PromptGiftsSchema.parse(req.body);
 
     const joinedHobbies = hobbies.join(", ");
@@ -58,6 +61,8 @@ export default async function handler(
     res.status(200).json({ gifts });
   } catch (error) {
     console.error(error);
+
+    Sentry.captureException(error, {});
 
     if (error instanceof ZodError) {
       return res.status(400).json({ error });
