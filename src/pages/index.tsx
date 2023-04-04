@@ -31,8 +31,6 @@ import { RELATIONSHIPS } from "../models/relationship";
 import { PromptGiftsSchema } from "../validation/prompt-gifts";
 
 function GiftResult({ gift }: { gift: Gift }) {
-  gift.keywords = ["bloe&bla", "test"];
-
   const link = `/api/gift?keywords=${gift.keywords
     .join("+")
     .replaceAll("&", " ")}`;
