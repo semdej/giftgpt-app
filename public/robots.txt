@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://gift-gpt.com
+
+# Sitemaps
+Sitemap: https://gift-gpt.com/sitemap.xml
