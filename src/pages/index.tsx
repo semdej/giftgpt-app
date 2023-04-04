@@ -20,7 +20,6 @@ import Confetti from "react-dom-confetti";
 import { FeatureCard } from "@/components/FeatureCard";
 import { useForm, zodResolver } from "@mantine/form";
 import { FaArrowLeft, FaGift, FaHeart, FaMicrochip } from "react-icons/fa";
-import { GiMeditation } from "react-icons/gi";
 import { ZodError, z } from "zod";
 
 import { GiftsLoadingMessage } from "../components/GiftLoadingMessage";
@@ -32,9 +31,11 @@ import { RELATIONSHIPS } from "../models/relationship";
 import { PromptGiftsSchema } from "../validation/prompt-gifts";
 
 function GiftResult({ gift }: { gift: Gift }) {
-  const link = `https://www.amazon.com/s?k=${gift.keywords.join(
-    "+"
-  )}&linkCode=ll2&tag=giftgpt03-20&language=en_US&ref_=as_li_ss_tl`;
+  gift.keywords = ["bloe&bla", "test"];
+
+  const link = `/api/gift?keywords=${gift.keywords
+    .join("+")
+    .replaceAll("&", " ")}`;
 
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder>
