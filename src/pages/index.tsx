@@ -96,6 +96,10 @@ export default function Home() {
       setGiftsLoadingError(null);
       setGiftsLoading(true);
 
+      if ("scrollTo" in window) {
+        window.scrollTo({ behavior: "smooth", top: 0 });
+      }
+
       const response = await fetch("/api/prompt-gifts", {
         method: "POST",
         body: JSON.stringify(values),
