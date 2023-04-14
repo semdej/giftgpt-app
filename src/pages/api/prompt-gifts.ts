@@ -24,9 +24,9 @@ export default async function handler(
 
     const joinedHobbies = hobbies.join(", ");
 
-    const completion = await backOff(
-      () =>
-        openai.createChatCompletion({
+    const gifts = await backOff(
+      async () => {
+        const completion = await openai.createChatCompletion({
           model: "gpt-3.5-turbo",
           messages: [
             {
@@ -48,15 +48,16 @@ export default async function handler(
           temperature: 1,
           presence_penalty: 0,
           frequency_penalty: 0,
-        }),
+        });
+
+        return (completion.data.choices[0].message?.content || "")
+          .split("\n")
+          .filter((gift) => gift.length > 0 && /[0-9]\..*/g.test(gift))
+          .map(parseGiftResponse)
+          .filter((gift) => gift !== null);
+      },
       { startingDelay: 1000, maxDelay: 60000, numOfAttempts: 7 }
     );
-
-    const gifts = (completion.data.choices[0].message?.content || "")
-      .split("\n")
-      .filter((gift) => gift.length > 0 && /[0-9]\..*/g.test(gift))
-      .map(parseGiftResponse)
-      .filter((gift) => gift !== null);
 
     res.status(200).json({ gifts });
   } catch (error) {
